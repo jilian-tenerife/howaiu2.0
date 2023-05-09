@@ -56,7 +56,7 @@ class CustomTile extends StatelessWidget {
                     shape: NeumorphicShape.convex,
                   ),
                   child: Text(
-                    'Other',
+                    'Camera',
                     style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.bold,
