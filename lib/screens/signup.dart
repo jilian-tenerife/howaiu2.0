@@ -1,7 +1,12 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:howaiu/screens/login.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class Signup extends StatefulWidget {
   @override
@@ -11,6 +16,7 @@ class Signup extends StatefulWidget {
 class _SignupState extends State<Signup> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  File? _userImage; // Variable to store the user's selected image
 
   @override
   void dispose() {
@@ -19,13 +25,33 @@ class _SignupState extends State<Signup> {
     super.dispose();
   }
 
-  Future<void> signUpWithEmailAndPassword(String email, String password) async {
+  Future<void> signUpWithEmailAndPassword(
+      String email, String password, File? userImage) async {
     try {
       UserCredential userCredential =
           await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
+
+      // Upload the user image to Firebase Storage
+      if (userImage != null) {
+        String userId = userCredential.user!.uid;
+        String imagePath = 'user_images/$userId.jpg';
+
+        UploadTask uploadTask =
+            FirebaseStorage.instance.ref().child(imagePath).putFile(userImage);
+        await uploadTask.whenComplete(() {});
+        String imageUrl =
+            await FirebaseStorage.instance.ref(imagePath).getDownloadURL();
+
+        // Save the image URL to the user's document in Firestore
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(userId)
+            .set({'image_url': imageUrl}, SetOptions(merge: true));
+      }
+
       // do something with the newly created user here
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
@@ -35,6 +61,17 @@ class _SignupState extends State<Signup> {
       }
     } catch (e) {
       print(e);
+    }
+  }
+
+  Future<void> _takePicture() async {
+    final picker = ImagePicker();
+    final imageFile = await picker.pickImage(source: ImageSource.camera);
+
+    if (imageFile != null) {
+      setState(() {
+        _userImage = File(imageFile.path);
+      });
     }
   }
 
@@ -70,68 +107,91 @@ class _SignupState extends State<Signup> {
                 height: 45,
               ),
               Container(
-                  width: 300,
-                  height: 60,
-                  child: Neumorphic(
-                    style: NeumorphicStyle(
-                        depth: -3,
-                        shape: NeumorphicShape.concave,
-                        color: baseColor),
-                    child: Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: TextField(
-                        controller: _emailController,
-                        style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: const Color(0xffabb6c8)),
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          hintText: 'Username',
-                          hintStyle: const TextStyle(
+                width: 300,
+                height: 200,
+                child: GestureDetector(
+                  onTap: _takePicture,
+                  child: _userImage != null
+                      ? Image.file(_userImage!)
+                      : Neumorphic(
+                          style: NeumorphicStyle(
+                              depth: -3,
+                              shape: NeumorphicShape.concave,
+                              color: baseColor),
+                          child: Icon(
+                            Icons.camera_alt,
+                            size: 50,
                             color: Color(0xff5d7599),
                           ),
-                          filled: true,
-                          fillColor: baseColor,
-                          contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 10),
                         ),
-                      ),
-                    ),
-                  )),
+                ),
+              ),
               SizedBox(
                 height: 25,
               ),
               Container(
-                  width: 300,
-                  height: 60,
-                  child: Neumorphic(
-                    style: NeumorphicStyle(
-                        depth: -3,
-                        shape: NeumorphicShape.flat,
-                        color: baseColor),
-                    child: Padding(
-                      padding: EdgeInsets.all(10),
-                      child: TextField(
-                        controller: _passwordController,
-                        style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xff5d7599)),
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          hintText: 'Password',
-                          hintStyle: TextStyle(
-                            color: Color(0xff5d7599),
-                          ),
-                          filled: true,
-                          fillColor: baseColor,
-                          contentPadding: EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 10),
+                width: 300,
+                height: 60,
+                child: Neumorphic(
+                  style: NeumorphicStyle(
+                      depth: -3,
+                      shape: NeumorphicShape.concave,
+                      color: baseColor),
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: TextField(
+                      controller: _emailController,
+                      style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: const Color(0xffabb6c8)),
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: 'Username',
+                        hintStyle: const TextStyle(
+                          color: Color(0xff5d7599),
                         ),
+                        filled: true,
+                        fillColor: baseColor,
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 10),
                       ),
                     ),
-                  )),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 25,
+              ),
+              Container(
+                width: 300,
+                height: 60,
+                child: Neumorphic(
+                  style: NeumorphicStyle(
+                      depth: -3, shape: NeumorphicShape.flat, color: baseColor),
+                  child: Padding(
+                    padding: EdgeInsets.all(10),
+                    child: TextField(
+                      controller: _passwordController,
+                      style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xff5d7599)),
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: 'Password',
+                        hintStyle: TextStyle(
+                          color: Color(0xff5d7599),
+                        ),
+                        filled: true,
+                        fillColor: baseColor,
+                        contentPadding:
+                            EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
               SizedBox(
                 height: 15,
               ),
@@ -153,7 +213,8 @@ class _SignupState extends State<Signup> {
                       final username = _emailController.text;
                       final password = _passwordController.text;
                       try {
-                        await signUpWithEmailAndPassword(username, password);
+                        await signUpWithEmailAndPassword(
+                            username, password, _userImage);
                         Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => Login()),
@@ -163,23 +224,22 @@ class _SignupState extends State<Signup> {
                       }
                     },
                     style: NeumorphicStyle(
-                      color: baseColor, // Set the button's background color
-                      depth: 5, // Set the depth of the button's shadow
+                      color: baseColor,
+                      depth: 5,
                       shape: NeumorphicShape.convex,
                     ),
                     child: Center(
                       child: Text(
-                        'Sign Up', // Set the text of the button
+                        'Sign Up',
                         style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
-                            color: Color(
-                                0xff5d7599)), // Set the font size of the text
+                            color: Color(0xff5d7599)),
                       ),
                     ),
                   ),
                 ),
-              ),
+              )
             ],
           ),
         ),
