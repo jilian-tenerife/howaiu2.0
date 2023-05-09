@@ -164,7 +164,7 @@ class _DiaryScreenState extends State<DiaryScreen> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => camera()));
+                                      builder: (context) => Camera()));
                             });
                       }))
             ])));
