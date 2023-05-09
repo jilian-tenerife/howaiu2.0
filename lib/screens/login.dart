@@ -65,7 +65,8 @@ class _LoginState extends State<Login> {
                         shape: NeumorphicShape.concave,
                         color: baseColor),
                     child: Padding(
-                      padding: const EdgeInsets.all(10),
+                      padding: EdgeInsets.all(
+                          MediaQuery.of(context).size.width * 0.02),
                       child: TextField(
                         controller: _emailController,
                         style: TextStyle(
@@ -80,8 +81,11 @@ class _LoginState extends State<Login> {
                           ),
                           filled: true,
                           fillColor: baseColor,
-                          contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 10),
+                          contentPadding: EdgeInsets.symmetric(
+                              horizontal:
+                                  MediaQuery.of(context).size.width * 0.04,
+                              vertical:
+                                  MediaQuery.of(context).size.height * 0.01),
                         ),
                       ),
                     ),
@@ -100,7 +104,8 @@ class _LoginState extends State<Login> {
                         shape: NeumorphicShape.flat,
                         color: baseColor),
                     child: Padding(
-                      padding: EdgeInsets.all(10),
+                      padding: EdgeInsets.all(
+                          MediaQuery.of(context).size.width * 0.025),
                       child: TextField(
                         controller: _passwordController,
                         obscureText: true,
@@ -148,12 +153,12 @@ class _LoginState extends State<Login> {
                     },
                   ),
                   SizedBox(
-                    width: 60,
+                    width: MediaQuery.of(context).size.width * 0.15,
                   )
                 ],
               ),
               SizedBox(
-                height: 45,
+                height: MediaQuery.of(context).size.height * 0.06,
               ),
               Container(
                 width: MediaQuery.of(context).size.width *
@@ -212,7 +217,7 @@ class _LoginState extends State<Login> {
                 ),
               ),
               SizedBox(
-                height: 35,
+                height: MediaQuery.of(context).size.height * 0.047,
               ),
               InkWell(
                 child: Text(
