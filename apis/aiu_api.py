@@ -7,7 +7,7 @@ app = Flask(__name__)
 previous_entries = []
 
 
-openai.api_key = "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"
+openai.api_key = "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"
 
 chat_history = []
 
@@ -47,6 +47,27 @@ def generate_contextual_response():
     past_entries = previous_entries[-3:]
     contextual_response = brainstorm_module.generate_contextual_response(entry, past_entries)
     return jsonify({"contextual_response": contextual_response})
+
+@app.route('/summary', methods=['POST'])
+def generate_summary():
+    all_entries = request.json['all_entries']
+    contextual_response = generate_summary(all_entries)
+    return jsonify({"contextual_response": contextual_response})
+
+def generate_summary(entries):
+    instruction = 'Summarize this into 500 words: '
+    prompt = instruction + ' '.join(entries)
+
+    response = openai.Completion.create(
+        engine='text-davinci-003',
+        prompt=prompt,
+        max_tokens=500,
+        n=1,
+        stop=None,
+        temperature=0.7,
+    )
+    print(response.choices[0].text.strip())
+    return response.choices[0].text.strip()
 
 
 def get_response(prompt, name):

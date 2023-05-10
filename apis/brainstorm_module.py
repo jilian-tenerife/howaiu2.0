@@ -1,6 +1,6 @@
 import openai
 
-openai.api_key = "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"
+openai.api_key = "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"
 
 previous_entries = []
 
@@ -23,7 +23,6 @@ Response:
     )
 
     return response.choices[0].text.strip()
-
 
 def generate_title(entry):
     prompt = f'''As an AI-powered intelligent mobile diary, my task is to generate a title for the following diary entry:

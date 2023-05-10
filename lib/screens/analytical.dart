@@ -34,22 +34,22 @@ class _AnalyticalFeedbackPageState extends State<AnalyticalFeedbackPage> {
   Future<void> processRequest(
       String route, String entry, Function(String) callback) async {
     // Uncomment the following lines and replace with your server logic
-    // final response = await http.post(
-    //   Uri.parse('http://10.0.2.2:5000/$route'),
-    //   headers: {'Content-Type': 'application/json'},
-    //   body: jsonEncode({'entry': entry}),
-    // );
+    final response = await http.post(
+      Uri.parse('http://127.0.0.1:5000/$route'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'entry': entry}),
+    );
 
-    // if (response.statusCode == 200) {
-    //   callback(jsonDecode(response.body)[route]);
-    // } else {
-    //   callback('Error: ${response.statusCode}');
-    // }
+    if (response.statusCode == 200) {
+      callback(jsonDecode(response.body)[route]);
+    } else {
+      callback('Error: ${response.statusCode}');
+    }
 
     // Mock response
-    Future.delayed(Duration(seconds: 1), () {
-      callback('Mock response for $route');
-    });
+    // Future.delayed(Duration(seconds: 1), () {
+    //   callback('Mock response for $route');
+    // });
   }
 
   @override
