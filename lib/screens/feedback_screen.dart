@@ -142,9 +142,9 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                   AnalyticalFeedbackPage(
                       entry: widget.entry,
                       previousEntries: widget.previousEntries),
-                  ContextualFeedbackPage(
-                      entry: widget.entry,
-                      previousEntries: widget.previousEntries),
+                  // ContextualFeedbackPage(
+                  //     entry: widget.entry,
+                  //     previousEntries: widget.previousEntries),
                 ],
               ),
             ),
@@ -180,10 +180,10 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                   icon: Icon(Icons.analytics),
                   label: 'Analytical',
                 ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.text_snippet),
-                  label: 'Contextual',
-                ),
+                // BottomNavigationBarItem(
+                //   icon: Icon(Icons.text_snippet),
+                //   label: 'Contextual',
+                // ),
               ],
             ),
           ),

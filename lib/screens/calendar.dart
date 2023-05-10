@@ -118,8 +118,11 @@ class _TableCalendarPageState extends State<TableCalendarPage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) =>
-                          DiaryScreen(formattedDate: formattedDate),
+                      builder: (context) => DiaryScreen(
+                        formattedDate: formattedDate,
+                        entry: '',
+                        previousEntries: [],
+                      ),
                     ),
                   );
                 },

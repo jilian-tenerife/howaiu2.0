@@ -83,164 +83,171 @@ class _SignupState extends State<Signup> {
       child: Scaffold(
         backgroundColor: baseColor,
         body: SingleChildScrollView(
-          child: Column(
-            children: [
-              const SizedBox(
-                height: 90,
-              ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'howaiu?',
-                    style: TextStyle(
-                        fontSize: 40,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xff5d7599)),
+          child: Center(
+            child: Column(
+              children: [
+                const SizedBox(
+                  height: 45,
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      height: MediaQuery.of(context).size.width * 0.4,
+                      width: MediaQuery.of(context).size.width * 0.4,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage('assets/images/howaiu.png'),
+                          fit: BoxFit
+                              .cover, // Specify how the image should be fitted inside the box
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  width: 300,
+                  height: 200,
+                  child: GestureDetector(
+                    onTap: _takePicture,
+                    child: _userImage != null
+                        ? Image.file(_userImage!)
+                        : Neumorphic(
+                            style: NeumorphicStyle(
+                                depth: -7,
+                                intensity: 8,
+                                lightSource: LightSource.topRight,
+                                shape: NeumorphicShape.convex,
+                                color: baseColor),
+                            child: Icon(
+                              Icons.camera_alt,
+                              size: 50,
+                              color: Color(0xff5d7599),
+                            ),
+                          ),
                   ),
-                ],
-              ),
-              const SizedBox(
-                height: 95,
-              ),
-              const SizedBox(
-                height: 45,
-              ),
-              Container(
-                width: 300,
-                height: 200,
-                child: GestureDetector(
-                  onTap: _takePicture,
-                  child: _userImage != null
-                      ? Image.file(_userImage!)
-                      : Neumorphic(
-                          style: NeumorphicStyle(
-                              depth: -3,
-                              shape: NeumorphicShape.concave,
-                              color: baseColor),
-                          child: Icon(
-                            Icons.camera_alt,
-                            size: 50,
+                ),
+                SizedBox(
+                  height: 25,
+                ),
+                Container(
+                  width: 300,
+                  height: 60,
+                  child: Neumorphic(
+                    style: NeumorphicStyle(
+                        depth: -3,
+                        shape: NeumorphicShape.concave,
+                        color: baseColor),
+                    child: Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: TextField(
+                        controller: _emailController,
+                        style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: const Color(0xffabb6c8)),
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: 'Username',
+                          hintStyle: const TextStyle(
                             color: Color(0xff5d7599),
                           ),
+                          filled: true,
+                          fillColor: baseColor,
+                          contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 10),
                         ),
-                ),
-              ),
-              SizedBox(
-                height: 25,
-              ),
-              Container(
-                width: 300,
-                height: 60,
-                child: Neumorphic(
-                  style: NeumorphicStyle(
-                      depth: -3,
-                      shape: NeumorphicShape.concave,
-                      color: baseColor),
-                  child: Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: TextField(
-                      controller: _emailController,
-                      style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: const Color(0xffabb6c8)),
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: 'Username',
-                        hintStyle: const TextStyle(
-                          color: Color(0xff5d7599),
-                        ),
-                        filled: true,
-                        fillColor: baseColor,
-                        contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 10),
                       ),
                     ),
                   ),
                 ),
-              ),
-              SizedBox(
-                height: 25,
-              ),
-              Container(
-                width: 300,
-                height: 60,
-                child: Neumorphic(
-                  style: NeumorphicStyle(
-                      depth: -3, shape: NeumorphicShape.flat, color: baseColor),
-                  child: Padding(
-                    padding: EdgeInsets.all(10),
-                    child: TextField(
-                      controller: _passwordController,
-                      style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xff5d7599)),
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: 'Password',
-                        hintStyle: TextStyle(
-                          color: Color(0xff5d7599),
-                        ),
-                        filled: true,
-                        fillColor: baseColor,
-                        contentPadding:
-                            EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                      ),
-                    ),
-                  ),
+                SizedBox(
+                  height: 25,
                 ),
-              ),
-              SizedBox(
-                height: 15,
-              ),
-              SizedBox(
-                height: 45,
-              ),
-              Container(
-                width: 250,
-                height: 60,
-                child: Neumorphic(
-                  style: NeumorphicStyle(
-                      depth: 5,
-                      shape: NeumorphicShape.concave,
-                      lightSource: LightSource.topLeft,
-                      intensity: 0.7,
-                      color: baseColor),
-                  child: NeumorphicButton(
-                    onPressed: () async {
-                      final username = _emailController.text;
-                      final password = _passwordController.text;
-                      try {
-                        await signUpWithEmailAndPassword(
-                            username, password, _userImage);
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => Login()),
-                        );
-                      } catch (e) {
-                        print('Error: $e');
-                      }
-                    },
+                Container(
+                  width: 300,
+                  height: 60,
+                  child: Neumorphic(
                     style: NeumorphicStyle(
-                      color: baseColor,
-                      depth: 5,
-                      shape: NeumorphicShape.convex,
-                    ),
-                    child: Center(
-                      child: Text(
-                        'Sign Up',
+                        depth: -3,
+                        shape: NeumorphicShape.flat,
+                        color: baseColor),
+                    child: Padding(
+                      padding: EdgeInsets.all(10),
+                      child: TextField(
+                        controller: _passwordController,
                         style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                             color: Color(0xff5d7599)),
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: 'Password',
+                          hintStyle: TextStyle(
+                            color: Color(0xff5d7599),
+                          ),
+                          filled: true,
+                          fillColor: baseColor,
+                          contentPadding: EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 10),
+                        ),
                       ),
                     ),
                   ),
                 ),
-              )
-            ],
+                SizedBox(
+                  height: 15,
+                ),
+                SizedBox(
+                  height: 45,
+                ),
+                Container(
+                  width: 250,
+                  height: 60,
+                  child: Neumorphic(
+                    style: NeumorphicStyle(
+                        depth: 5,
+                        shape: NeumorphicShape.concave,
+                        lightSource: LightSource.topLeft,
+                        intensity: 0.7,
+                        color: baseColor),
+                    child: NeumorphicButton(
+                      onPressed: () async {
+                        final username = _emailController.text;
+                        final password = _passwordController.text;
+                        try {
+                          await signUpWithEmailAndPassword(
+                              username, password, _userImage);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => Login()),
+                          );
+                        } catch (e) {
+                          print('Error: $e');
+                        }
+                      },
+                      style: NeumorphicStyle(
+                        color: baseColor,
+                        depth: 5,
+                        shape: NeumorphicShape.convex,
+                      ),
+                      child: Center(
+                        child: Text(
+                          'Sign Up',
+                          style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xff5d7599)),
+                        ),
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),

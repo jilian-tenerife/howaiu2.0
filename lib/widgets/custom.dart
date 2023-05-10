@@ -47,23 +47,18 @@ class CustomTile extends StatelessWidget {
                 ),
                 SizedBox(width: 10),
                 NeumorphicButton(
-                  onPressed: onOtherTap,
-                  style: NeumorphicStyle(
-                    color: Colors.grey[300],
-                    depth: 8,
-                    intensity: 0.7,
-                    lightSource: LightSource.topLeft,
-                    shape: NeumorphicShape.convex,
-                  ),
-                  child: Text(
-                    'Camera',
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xff5d7599),
+                    onPressed: onOtherTap,
+                    style: NeumorphicStyle(
+                      color: Colors.grey[300],
+                      depth: 8,
+                      intensity: 0.7,
+                      lightSource: LightSource.topLeft,
+                      shape: NeumorphicShape.convex,
                     ),
-                  ),
-                ),
+                    child: Icon(
+                      Icons.camera_alt_rounded,
+                      color: Color(0xff5d7599),
+                    )),
               ],
             ),
           ],
