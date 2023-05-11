@@ -53,7 +53,8 @@ class _DiaryScreenState extends State<DiaryScreen> {
         .then((doc) {
       if (doc.exists) {
         setState(() {
-          entries.add(doc['entry']);
+          entries = List<String>.from(doc['entries']
+              as List<dynamic>); // convert the entries to a List<String>
         });
       }
     });
@@ -113,17 +114,17 @@ class _DiaryScreenState extends State<DiaryScreen> {
               ),
               NeumorphicButton(
                 onPressed: () {
+                  entries.insert(
+                      0,
+                      entryController
+                          .text); // add new entry to the beginning of the list
                   FirebaseFirestore.instance
                       .collection(widget.formattedDate)
                       .doc(FirebaseAuth.instance.currentUser!.uid)
                       .set({
-                    'entry': entryController.text,
+                    'entries': entries,
                   });
                   setState(() {
-                    entries.insert(
-                        0,
-                        entryController
-                            .text); // add new entry to the beginning of the list
                     entryController.clear();
                   });
                 },
