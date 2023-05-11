@@ -1,6 +1,6 @@
 import openai
 
-openai.api_key = "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"
+openai.api_key = "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"
 
 previous_entries = []
 

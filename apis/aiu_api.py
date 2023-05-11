@@ -7,7 +7,7 @@ app = Flask(__name__)
 previous_entries = []
 
 
-openai.api_key = "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"
+openai.api_key = "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"
 
 chat_history = []
 
@@ -55,13 +55,13 @@ def generate_summary():
     return jsonify({"contextual_response": contextual_response})
 
 def generate_summary(entries):
-    instruction = 'Summarize this into 500 words: '
+    instruction = 'Understand the instructions step by step. These are a compilation of diary writings. Create insightful, critical, and objective assessments. Take note of context, crucial information, and entities and how it affects the person. If some topics relate to each other, analyze it. Address the person as "you". The writings: '
     prompt = instruction + ' '.join(entries)
 
     response = openai.Completion.create(
         engine='text-davinci-003',
         prompt=prompt,
-        max_tokens=500,
+        max_tokens=2000,
         n=1,
         stop=None,
         temperature=0.7,
