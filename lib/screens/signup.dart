@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -78,7 +77,8 @@ class _SignupState extends State<Signup> {
   @override
   Widget build(BuildContext context) {
     Color baseColor = Color(0xffdadada);
-
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
     return SafeArea(
       child: Scaffold(
         backgroundColor: baseColor,
@@ -86,8 +86,8 @@ class _SignupState extends State<Signup> {
           child: Center(
             child: Column(
               children: [
-                const SizedBox(
-                  height: 45,
+                SizedBox(
+                  height: screenHeight * 0.05,
                 ),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -105,12 +105,12 @@ class _SignupState extends State<Signup> {
                     ),
                   ],
                 ),
-                const SizedBox(
-                  height: 10,
+                SizedBox(
+                  height: screenHeight * 0.03,
                 ),
                 Container(
-                  width: 300,
-                  height: 200,
+                  width: screenWidth * 0.8,
+                  height: screenHeight * 0.2,
                   child: GestureDetector(
                     onTap: _takePicture,
                     child: _userImage != null
@@ -131,18 +131,19 @@ class _SignupState extends State<Signup> {
                   ),
                 ),
                 SizedBox(
-                  height: 25,
+                  height: screenHeight * 0.03,
                 ),
                 Container(
-                  width: 300,
-                  height: 60,
+                  width: screenWidth * 0.8,
+                  height: screenHeight * 0.08,
                   child: Neumorphic(
                     style: NeumorphicStyle(
                         depth: -3,
                         shape: NeumorphicShape.concave,
                         color: baseColor),
                     child: Padding(
-                      padding: const EdgeInsets.all(10),
+                      padding: EdgeInsets.all(
+                          MediaQuery.of(context).size.width * 0.02),
                       child: TextField(
                         controller: _emailController,
                         style: TextStyle(
@@ -157,26 +158,30 @@ class _SignupState extends State<Signup> {
                           ),
                           filled: true,
                           fillColor: baseColor,
-                          contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 10),
+                          contentPadding: EdgeInsets.symmetric(
+                            horizontal: MediaQuery.of(context).size.width *
+                                0.04, // For example, set horizontal padding to be 4% of screen width
+                            vertical: MediaQuery.of(context).size.height * 0.02,
+                          ),
                         ),
                       ),
                     ),
                   ),
                 ),
                 SizedBox(
-                  height: 25,
+                  height: screenHeight * 0.03,
                 ),
                 Container(
-                  width: 300,
-                  height: 60,
+                  width: screenWidth * 0.8,
+                  height: screenHeight * 0.08,
                   child: Neumorphic(
                     style: NeumorphicStyle(
                         depth: -3,
                         shape: NeumorphicShape.flat,
                         color: baseColor),
                     child: Padding(
-                      padding: EdgeInsets.all(10),
+                      padding: EdgeInsets.all(
+                          MediaQuery.of(context).size.width * 0.02),
                       child: TextField(
                         controller: _passwordController,
                         style: TextStyle(
@@ -192,21 +197,24 @@ class _SignupState extends State<Signup> {
                           filled: true,
                           fillColor: baseColor,
                           contentPadding: EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 10),
+                            horizontal:
+                                MediaQuery.of(context).size.width * 0.04,
+                            vertical: MediaQuery.of(context).size.height * 0.02,
+                          ),
                         ),
                       ),
                     ),
                   ),
                 ),
                 SizedBox(
-                  height: 15,
+                  height: screenHeight * 0.02,
                 ),
                 SizedBox(
-                  height: 45,
+                  height: screenHeight * 0.05,
                 ),
                 Container(
-                  width: 250,
-                  height: 60,
+                  width: screenWidth * 0.65,
+                  height: screenHeight * 0.08,
                   child: Neumorphic(
                     style: NeumorphicStyle(
                         depth: 5,
