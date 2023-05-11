@@ -103,7 +103,22 @@ class _ChatAiuState extends State<ChatAiu> {
                 }
 
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return CircularProgressIndicator();
+                  return Center(
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: <Widget>[
+                        CircularProgressIndicator(
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(Color(0xffabb6c8)),
+                          strokeWidth: 20,
+                        ),
+                        Text(
+                          "AiU",
+                          style: TextStyle(color: Color(0xff5d7599)),
+                        ), // Show text over CircularProgressIndicator
+                      ],
+                    ),
+                  );
                 }
 
                 final List<ChatBubble> chatBubbles =

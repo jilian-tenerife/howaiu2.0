@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:howaiu/screens/diary_entries.dart';
 import 'package:howaiu/screens/left.dart';
-import 'package:howaiu/screens/right.dart';
+import 'package:howaiu/screens/right.dart' as howaiu_settings;
 import 'package:table_calendar/table_calendar.dart';
 import 'chat.dart';
 
@@ -32,12 +32,12 @@ class _TableCalendarPageState extends State<TableCalendarPage> {
       child: Column(
         children: [
           SizedBox(
-            height: 25,
+            height: MediaQuery.of(context).size.height * 0.03,
           ),
           Row(
             children: [
-              const SizedBox(
-                width: 105,
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.3,
               ),
               Text(
                 'howaiu',
@@ -46,8 +46,8 @@ class _TableCalendarPageState extends State<TableCalendarPage> {
                     fontWeight: FontWeight.bold,
                     color: Color(0xff5d7599)),
               ),
-              const SizedBox(
-                width: 65,
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.18,
               ),
               Neumorphic(
                 style: NeumorphicStyle(
@@ -59,8 +59,8 @@ class _TableCalendarPageState extends State<TableCalendarPage> {
                   color: Colors.grey[300],
                 ),
                 child: Container(
-                  width: 50,
-                  height: 50,
+                  width: MediaQuery.of(context).size.width * 0.13,
+                  height: MediaQuery.of(context).size.width * 0.13,
                   alignment: Alignment.center,
                   child: const Icon(
                     Icons.person_2,
@@ -71,11 +71,11 @@ class _TableCalendarPageState extends State<TableCalendarPage> {
             ],
           ),
           SizedBox(
-            height: 70,
+            height: MediaQuery.of(context).size.height * 0.08,
           ),
           SizedBox(
-            width: 350,
-            height: 400,
+            width: MediaQuery.of(context).size.width * 0.9,
+            height: MediaQuery.of(context).size.height * 0.5,
             child: Neumorphic(
               style: NeumorphicStyle(
                 depth: 5,
@@ -118,8 +118,11 @@ class _TableCalendarPageState extends State<TableCalendarPage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) =>
-                          DiaryScreen(formattedDate: formattedDate),
+                      builder: (context) => DiaryScreen(
+                        formattedDate: formattedDate,
+                        entry: '',
+                        previousEntries: [],
+                      ),
                     ),
                   );
                 },
@@ -136,8 +139,8 @@ class _TableCalendarPageState extends State<TableCalendarPage> {
               ),
             ),
           ),
-          const SizedBox(
-            height: 70,
+          SizedBox(
+            height: MediaQuery.of(context).size.height * 0.05,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -158,8 +161,8 @@ class _TableCalendarPageState extends State<TableCalendarPage> {
                   color: Colors.grey[300],
                 ),
                 child: Container(
-                  width: 60,
-                  height: 60,
+                  width: MediaQuery.of(context).size.width * 0.16,
+                  height: MediaQuery.of(context).size.width * 0.16,
                   alignment: Alignment.center,
                   child: Icon(
                     Icons.auto_graph_sharp,
@@ -183,8 +186,8 @@ class _TableCalendarPageState extends State<TableCalendarPage> {
                   color: Colors.grey[300],
                 ),
                 child: Container(
-                  width: 100,
-                  height: 100,
+                  width: MediaQuery.of(context).size.width * 0.26,
+                  height: MediaQuery.of(context).size.width * 0.26,
                   alignment: Alignment.center,
                   child: Text('AiU',
                       style: TextStyle(
@@ -197,7 +200,8 @@ class _TableCalendarPageState extends State<TableCalendarPage> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => ChatAiu()),
+                    MaterialPageRoute(
+                        builder: (context) => howaiu_settings.Settings()),
                   );
                 },
                 style: NeumorphicStyle(
@@ -209,8 +213,8 @@ class _TableCalendarPageState extends State<TableCalendarPage> {
                   color: Colors.grey[300],
                 ),
                 child: Container(
-                  width: 60,
-                  height: 60,
+                  width: MediaQuery.of(context).size.width * 0.16,
+                  height: MediaQuery.of(context).size.width * 0.16,
                   alignment: Alignment.center,
                   child: Icon(
                     Icons.settings,

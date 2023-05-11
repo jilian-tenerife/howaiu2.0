@@ -189,11 +189,83 @@ class _LoginState extends State<Login> {
                           );
                         }
                       } on FirebaseAuthException catch (e) {
+                        String message;
                         if (e.code == 'user-not-found') {
-                          print('No user found for that email.');
+                          message = ('No user found with that email.');
                         } else if (e.code == 'wrong-password') {
-                          print('Wrong password provided for that user.');
+                          message = ('Wrong password provided for that user.');
+                        } else {
+                          message = "Something went wrong.";
                         }
+                        showGeneralDialog(
+                          context: context,
+                          barrierDismissible: true,
+                          barrierLabel: MaterialLocalizations.of(context)
+                              .modalBarrierDismissLabel,
+                          barrierColor: Colors.black45,
+                          transitionDuration: const Duration(milliseconds: 200),
+                          pageBuilder: (BuildContext buildContext,
+                              Animation animation,
+                              Animation secondaryAnimation) {
+                            return Center(
+                              child: Container(
+                                width: MediaQuery.of(context).size.width * 0.7,
+                                height:
+                                    MediaQuery.of(context).size.height * 0.3,
+                                padding: EdgeInsets.all(20),
+                                color: Colors.transparent,
+                                child: Neumorphic(
+                                  style: NeumorphicStyle(
+                                    shape: NeumorphicShape.concave,
+                                    boxShape: NeumorphicBoxShape.roundRect(
+                                        BorderRadius.circular(12)),
+                                    depth: 3,
+                                    lightSource: LightSource.topLeft,
+                                    color: baseColor,
+                                  ),
+                                  child: Column(
+                                    children: <Widget>[
+                                      SizedBox(height: 30),
+                                      Text(
+                                        "Error",
+                                        style: TextStyle(
+                                            fontSize: 25,
+                                            fontWeight: FontWeight.bold,
+                                            color: Color(0xff5d7599)),
+                                      ),
+                                      SizedBox(height: 30),
+                                      Text(
+                                        message,
+                                        style: TextStyle(
+                                            fontSize: 20,
+                                            color: Color(0xff5d7599)),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      SizedBox(height: 25),
+                                      NeumorphicButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        style: NeumorphicStyle(
+                                          shape: NeumorphicShape.concave,
+                                          depth: 8,
+                                          intensity: 0.7,
+                                          lightSource: LightSource.bottomRight,
+                                          color: Colors.grey[300],
+                                        ),
+                                        child: Text(
+                                          "OK",
+                                          style: TextStyle(
+                                              color: Color(0xff5d7599)),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        );
                       }
                     },
                     style: NeumorphicStyle(

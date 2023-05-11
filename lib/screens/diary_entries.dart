@@ -6,14 +6,20 @@ import 'package:howaiu/screens/calendar.dart';
 import 'package:howaiu/screens/camera.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../widgets/custom.dart';
+import 'contextual.dart';
 import 'feedback_screen.dart';
 
 class DiaryScreen extends StatefulWidget {
   final String formattedDate;
-
-  const DiaryScreen({required this.formattedDate});
+  final String entry;
+  final List<String> previousEntries;
+  const DiaryScreen(
+      {required this.formattedDate,
+      required this.entry,
+      required this.previousEntries});
   @override
   _DiaryScreenState createState() => _DiaryScreenState();
 }
@@ -21,12 +27,13 @@ class DiaryScreen extends StatefulWidget {
 class _DiaryScreenState extends State<DiaryScreen> {
   List<String> entries = [];
   TextEditingController entryController = TextEditingController();
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   String _result = '';
 
   Future<void> processRequest(String route) async {
     final response = await http.post(
-      Uri.parse('http://10.0.2.2:5000/$route'),
+      Uri.parse('http://127.0.0.1:5000/$route'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({'entry': entryController.text}),
     );
@@ -39,6 +46,45 @@ class _DiaryScreenState extends State<DiaryScreen> {
       setState(() {
         _result = 'Error: ${response.statusCode}';
       });
+    }
+  }
+
+  void getAndSummarizeData() async {
+    print("hoy");
+    String collectionName = DateFormat('yyyy-MM-dd').format(DateTime.now());
+    CollectionReference collection = firestore.collection(collectionName);
+    print(collection);
+    print("err");
+    QuerySnapshot querySnapshot = await collection.get();
+    print("daw bi");
+    print(collection.get());
+    print("oi!");
+    for (var doc in querySnapshot.docs) {
+      print("hoy");
+      List<String> entries = doc.get('entries').cast<String>();
+      String summary = await getSummaryFromPythonAPI(entries);
+      print(summary);
+      print("ey");
+      // create "day_summary" document
+      await collection.doc('day_summary').set({'summary': summary});
+    }
+  }
+
+  Future<String> getSummaryFromPythonAPI(List<String> entries) async {
+    final response = await http.post(
+      Uri.parse('http://localhost:5000/summary'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, dynamic>{
+        'all_entries': entries,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body)['contextual_response'];
+    } else {
+      throw Exception('Failed to load summary');
     }
   }
 
@@ -65,109 +111,182 @@ class _DiaryScreenState extends State<DiaryScreen> {
     Color baseColor = const Color(0xffdadada);
 
     return SafeArea(
-        child: Scaffold(
-            backgroundColor: baseColor,
-            body: Column(children: [
-              SizedBox(
-                height: 25,
+      child: Scaffold(
+        backgroundColor: baseColor,
+        body: Column(
+          children: [
+            SizedBox(
+              height: 25,
+            ),
+            Text(
+              "How was your day?",
+              style: TextStyle(
+                  fontSize: 35,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xff5d7599)),
+            ),
+            SizedBox(
+              height: 25,
+            ),
+            SizedBox(
+              width: 350,
+              height: 300,
+              child: Neumorphic(
+                style: NeumorphicStyle(
+                  depth: -5,
+                  intensity: 7,
+                  shape: NeumorphicShape.concave,
+                  color: baseColor,
+                ),
+                child: Padding(
+                  padding: EdgeInsets.only(top: 10, left: 20),
+                  child: TextField(
+                    controller: entryController,
+                    decoration: InputDecoration(
+                      hintText: "Write your thoughts...",
+                      hintStyle: TextStyle(
+                        color: Color(0xff5d7599),
+                      ),
+                      border: InputBorder.none,
+                      enabledBorder: InputBorder.none,
+                    ),
+                    maxLines: null,
+                    keyboardType: TextInputType.multiline,
+                  ),
+                ),
               ),
-              Text(
-                "How was your day?",
+            ),
+            SizedBox(
+              height: 50,
+            ),
+            NeumorphicButton(
+              onPressed: () {
+                entries.insert(
+                    0,
+                    entryController
+                        .text); // add new entry to the beginning of the list
+                FirebaseFirestore.instance
+                    .collection(widget.formattedDate)
+                    .doc(FirebaseAuth.instance.currentUser!.uid)
+                    .set({
+                  'entries': entries,
+                });
+                setState(() {
+                  entryController.clear();
+                });
+              },
+              style: NeumorphicStyle(
+                color: Colors.grey[300], // Set the button's background color
+                depth: 8,
+                intensity: 0.7,
+                lightSource: LightSource.topLeft,
+                shape: NeumorphicShape.convex,
+              ),
+              child: Text(
+                'Add Entry',
                 style: TextStyle(
-                    fontSize: 35,
+                    fontSize: 18,
                     fontWeight: FontWeight.bold,
                     color: Color(0xff5d7599)),
               ),
-              SizedBox(
-                height: 25,
-              ),
-              SizedBox(
-                width: 350,
-                height: 300,
-                child: Neumorphic(
-                  style: NeumorphicStyle(
-                    depth: -5,
-                    intensity: 7,
-                    shape: NeumorphicShape.concave,
-                    color: baseColor,
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.only(top: 10, left: 20),
-                    child: TextField(
-                      controller: entryController,
-                      decoration: InputDecoration(
-                        hintText: "Write your thoughts...",
-                        hintStyle: TextStyle(
-                          color: Color(0xff5d7599),
-                        ),
-                        border: InputBorder.none,
-                        enabledBorder: InputBorder.none,
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            NeumorphicButton(
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(
+                            20.0), // you can adjust the radius here
                       ),
-                      maxLines: null,
-                      keyboardType: TextInputType.multiline,
-                    ),
-                  ),
+                      title: Text(""),
+                      content: Text(
+                        "You will not be able to add any journals for the day if you continue ",
+                        style: TextStyle(color: Color(0xff5d7599)),
+                        textAlign: TextAlign.center,
+                      ),
+                      actions: [
+                        TextButton(
+                          child: Text(
+                            "Close",
+                            style: TextStyle(
+                                color: Color(0xff5d7599),
+                                fontWeight: FontWeight.bold),
+                          ),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                        TextButton(
+                          child: Text(
+                            "Continue",
+                            style: TextStyle(
+                                color: Color(0xff5d7599),
+                                fontWeight: FontWeight.bold),
+                          ),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+
+                            getAndSummarizeData();
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+              child: Text(
+                "Contextual",
+                style: TextStyle(
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xff5d7599),
                 ),
               ),
-              SizedBox(
-                height: 50,
+              style: NeumorphicStyle(
+                boxShape:
+                    NeumorphicBoxShape.roundRect(BorderRadius.circular(12)),
+                color: baseColor,
+                depth: 5,
+                intensity: 0.7, // Set the intensity of the button's surface
+                lightSource: LightSource
+                    .bottomLeft, // Set the direction of the light source
               ),
-              NeumorphicButton(
-                onPressed: () {
-                  entries.insert(
-                      0,
-                      entryController
-                          .text); // add new entry to the beginning of the list
-                  FirebaseFirestore.instance
-                      .collection(widget.formattedDate)
-                      .doc(FirebaseAuth.instance.currentUser!.uid)
-                      .set({
-                    'entries': entries,
-                  });
-                  setState(() {
-                    entryController.clear();
-                  });
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemCount: entries.length,
+                itemBuilder: (context, index) {
+                  return CustomTile(
+                      text: entries[index],
+                      onFeedbackTap: () {
+                        // Call API and functions here
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => FeedbackScreen(
+                              entry: entries[index],
+                              previousEntries: entries.sublist(index + 1),
+                            ),
+                          ),
+                        );
+                      },
+                      onOtherTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => Camera()),
+                        );
+                      });
                 },
-                style: NeumorphicStyle(
-                  color: Colors.grey[300], // Set the button's background color
-                  depth: 8,
-                  intensity: 0.7,
-                  lightSource: LightSource.topLeft,
-                  shape: NeumorphicShape.convex,
-                ),
-                child: Text(
-                  'Add Entry',
-                  style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xff5d7599)),
-                ),
               ),
-              Expanded(
-                  child: ListView.builder(
-                      itemCount: entries.length,
-                      itemBuilder: (context, index) {
-                        return CustomTile(
-                            text: entries[index],
-                            onFeedbackTap: () {
-                              // Call API and functions here
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => FeedbackScreen(
-                                    entry: entries[index],
-                                    previousEntries: entries.sublist(index + 1),
-                                  ),
-                                ),
-                              );
-                            },
-                            onOtherTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => Camera()));
-                            });
-                      }))
-            ])));
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
