@@ -34,7 +34,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
       String route, String entry, Function(String) callback) async {
     // Uncomment the following lines and replace with your server logic
     final response = await http.post(
-      Uri.parse('http://127.0.0.1:5000/$route'),
+      Uri.parse('http://192.168.244.88:5001/$route'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({'entry': entry}),
     );
