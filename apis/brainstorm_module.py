@@ -1,7 +1,6 @@
 import openai
 
-openai.api_key = "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"
-
+openai.api_key = "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"
 previous_entries = []
 
 def generate_contextual_response(entry, past_entries):

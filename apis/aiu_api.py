@@ -7,7 +7,7 @@ app = Flask(__name__)
 previous_entries = []
 
 
-openai.api_key = "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"
+openai.api_key = "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"
 
 chat_history = []
 
@@ -101,4 +101,4 @@ def chat():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+    app.run(host="0.0.0.0", port=5001)

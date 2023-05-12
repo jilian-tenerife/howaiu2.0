@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ContextualFeedbackPage extends StatefulWidget {
   final String formatted_date;
@@ -14,6 +13,24 @@ class ContextualFeedbackPage extends StatefulWidget {
 
 class _ContextualFeedbackPageState extends State<ContextualFeedbackPage> {
   String contextualResponse = '';
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+  @override
+  void initState() {
+    super.initState();
+    // Fetch entries from Cloud Firestore
+    FirebaseFirestore.instance
+        .collection(widget.formatted_date)
+        .doc('todaySummary')
+        .get()
+        .then((doc) {
+      if (doc.exists) {
+        setState(() {
+          contextualResponse = doc['contextualSummary'];
+        });
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
