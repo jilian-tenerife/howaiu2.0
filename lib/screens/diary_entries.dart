@@ -49,30 +49,80 @@ class _DiaryScreenState extends State<DiaryScreen> {
     }
   }
 
-  void getAndSummarizeData() async {
-    print("hoy");
-    String collectionName = DateFormat('yyyy-MM-dd').format(DateTime.now());
+  Future<void> getAndSummarizeData(String collectionName) async {
+    print("getAndSummarizeData: collectionName = $collectionName");
     CollectionReference collection = firestore.collection(collectionName);
-    print(collection);
-    print("err");
     QuerySnapshot querySnapshot = await collection.get();
-    print("daw bi");
-    print(collection.get());
-    print("oi!");
     for (var doc in querySnapshot.docs) {
-      print("hoy");
+      print("getAndSummarizeData: doc = ${doc.id}");
       List<String> entries = doc.get('entries').cast<String>();
       String summary = await getSummaryFromPythonAPI(entries);
-      print(summary);
-      print("ey");
+      print("getAndSummarizeData: summary = $summary");
       // create "day_summary" document
       await collection.doc('day_summary').set({'summary': summary});
+      print("getAndSummarizeData: day_summary document created");
     }
+  }
+
+  Future<void> getContextToday() async {
+    String startCollection = "2023-05-01";
+    String today = widget.formattedDate;
+    String todaySummary = "";
+    int count = 0;
+    DateTime start = DateTime.parse(startCollection);
+    DateTime end = DateTime.parse(today);
+
+    print("getContextToday: start = $start, end = $end");
+
+    for (int i = 0; i <= end.difference(start).inDays; i++) {
+      // Format the date for the collection name
+      String collectionName =
+          DateFormat('yyyy-MM-dd').format(start.add(Duration(days: i)));
+      print("Checking collection: $collectionName");
+
+      // Check if the collection exists and contains documents
+      QuerySnapshot querySnapshot =
+          await firestore.collection(collectionName).get();
+      if (querySnapshot.size == 0) {
+        print("No documents found in collection: $collectionName");
+        continue;
+      }
+
+      // Try to get the 'day_summary' document from the collection
+      DocumentSnapshot doc =
+          await firestore.collection(collectionName).doc('day_summary').get();
+
+      if (doc.exists) {
+        // If the 'day_summary' document exists, append its summary to 'todaySummary'
+        print(
+            "Found existing 'day_summary' document in collection: $collectionName");
+        todaySummary += doc.get('summary');
+        count++; // Increment count here
+      } else {
+        // If the 'day_summary' document does not exist, create it and append its summary to 'todaySummary'
+        print(
+            "'day_summary' document does not exist in collection: $collectionName. Creating now...");
+        await getAndSummarizeData(collectionName);
+        DocumentSnapshot updatedDoc =
+            await firestore.collection(collectionName).doc('day_summary').get();
+        String newSummary = updatedDoc.get('summary');
+        todaySummary += newSummary;
+        count++; // Increment count here
+      }
+      print("Today's summary for collection $collectionName: $todaySummary");
+    }
+
+    // create "todaySummary" document
+    await firestore
+        .collection(today)
+        .doc('todaySummary')
+        .set({'contextualSummary': todaySummary});
+    print("getContextToday: todaySummary document created");
   }
 
   Future<String> getSummaryFromPythonAPI(List<String> entries) async {
     final response = await http.post(
-      Uri.parse('http://localhost:5000/summary'),
+      Uri.parse('http://127.0.0.1:5000/summary'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -230,8 +280,7 @@ class _DiaryScreenState extends State<DiaryScreen> {
                           ),
                           onPressed: () {
                             Navigator.of(context).pop();
-
-                            getAndSummarizeData();
+                            getContextToday();
                           },
                         ),
                       ],

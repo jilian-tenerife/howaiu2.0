@@ -23,7 +23,7 @@ EMOTIONS = [
     "sad",
     "surprise",
     "neutral",
-]  # Assumed emotions
+]  # Assumed emotions~
 
 
 def load_image_from_data(data):
