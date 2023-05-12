@@ -225,7 +225,11 @@ class _LoginState extends State<Login> {
                                   ),
                                   child: Column(
                                     children: <Widget>[
-                                      SizedBox(height: 30),
+                                      SizedBox(
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              0.03),
                                       Text(
                                         "Error",
                                         style: TextStyle(
@@ -233,7 +237,11 @@ class _LoginState extends State<Login> {
                                             fontWeight: FontWeight.bold,
                                             color: Color(0xff5d7599)),
                                       ),
-                                      SizedBox(height: 30),
+                                      SizedBox(
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              0.03),
                                       Text(
                                         message,
                                         style: TextStyle(
@@ -241,7 +249,11 @@ class _LoginState extends State<Login> {
                                             color: Color(0xff5d7599)),
                                         textAlign: TextAlign.center,
                                       ),
-                                      SizedBox(height: 25),
+                                      SizedBox(
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              0.025),
                                       NeumorphicButton(
                                         onPressed: () {
                                           Navigator.of(context).pop();

@@ -12,35 +12,37 @@ class _LeftPageState extends State<LeftPage> {
   @override
   Widget build(BuildContext context) {
     Color baseColor = const Color(0xffdadada);
-
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: baseColor,
       body: Center(
         child: Column(
           children: [
             SizedBox(
-              height: 65,
+              height: screenHeight * 0.08,
             ),
             Text(
               "GARFIELD'S EMOTIONAL STATS",
               style: TextStyle(
                   fontSize: 25,
                   fontWeight: FontWeight.bold,
-                  color: Colors.white),
+                  color: Color(0xff5d7599)),
+              textAlign: TextAlign.center,
             ),
             SizedBox(
-              height: 125,
+              height: screenHeight * 0.15,
             ),
-            // Container(
-            //   width: 350,
-            //   height: 350,
-            //   decoration: BoxDecoration(
-            //     image: DecorationImage(
-            //       image: AssetImage('assets/images/stats.jpg'),
-            //       fit: BoxFit.cover,
-            //     ),
-            //   ),
-            // ),
+            Container(
+              width: screenWidth * 0.85, // adjust the value as needed
+              height: screenHeight * 0.4,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/images/stats.png'),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
             NeumorphicButton(
               onPressed: () {
                 Navigator.push(
@@ -56,8 +58,8 @@ class _LeftPageState extends State<LeftPage> {
                 color: Colors.grey[300],
               ),
               child: Container(
-                width: 200,
-                height: 50,
+                width: screenWidth * 0.5, // adjust the value as needed
+                height: screenHeight * 0.075,
                 alignment: Alignment.center,
                 child: Text('Chat AiU',
                     style: TextStyle(

@@ -47,7 +47,7 @@ class _TableCalendarPageState extends State<TableCalendarPage> {
                     color: Color(0xff5d7599)),
               ),
               SizedBox(
-                width: MediaQuery.of(context).size.width * 0.18,
+                width: MediaQuery.of(context).size.width * 0.10,
               ),
               Neumorphic(
                 style: NeumorphicStyle(

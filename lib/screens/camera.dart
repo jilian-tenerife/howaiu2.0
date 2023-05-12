@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -38,7 +39,7 @@ class _CameraState extends State<Camera> {
       final userImgB64 = base64Encode(userImgBytes);
 
       final response = await dio.post(
-        'http://localhost:5001/find_and_recognize',
+        'http://172.30.1.84:5000/find_and_recognize',
         data: jsonEncode({
           'new_image': userImgB64,
         }),
@@ -63,30 +64,97 @@ class _CameraState extends State<Camera> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Face Emotion Detector'),
-      ),
+      backgroundColor: Color(0xffdadada),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            if (_emotion.isNotEmpty)
+        child: SafeArea(
+          child: Column(
+            children: <Widget>[
+              SizedBox(height: 50),
               Text(
-                'Emotion: $_emotion\nConfidence: $_confidence',
-                style: Theme.of(context).textTheme.headline6,
-                textAlign: TextAlign.center,
+                'AIseeU',
+                style: TextStyle(
+                    color: Color(0xff5d7599),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 30),
               ),
-            SizedBox(height: 30),
-            ElevatedButton(
-              child: Text('Take Picture'),
-              onPressed: _takePicture,
-            ),
-            SizedBox(height: 10),
-            ElevatedButton(
-              child: Text('Detect Emotion'),
-              onPressed: _findAndRecognize,
-            ),
-          ],
+              SizedBox(height: 100),
+              if (_emotion.isNotEmpty)
+                Neumorphic(
+                  style: NeumorphicStyle(
+                    shape: NeumorphicShape.concave,
+                    boxShape:
+                        NeumorphicBoxShape.roundRect(BorderRadius.circular(12)),
+                    depth: -8,
+                    intensity: 8,
+                    lightSource: LightSource.topLeft,
+                    color: Colors.grey[300],
+                  ),
+                  child: Container(
+                    width: 250,
+                    height: 190,
+                    padding: EdgeInsets.all(16),
+                    child: Text(
+                      '\nEmotion: $_emotion\n\n\nConfidence: $_confidence',
+                      style: Theme.of(context)
+                          .textTheme
+                          .titleLarge
+                          ?.copyWith(color: Color(0xff5d7599)),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+              SizedBox(height: 30),
+              Container(
+                width: 150,
+                height: 45,
+                child: NeumorphicButton(
+                  onPressed: _takePicture,
+                  style: NeumorphicStyle(
+                    shape: NeumorphicShape.convex,
+                    boxShape:
+                        NeumorphicBoxShape.roundRect(BorderRadius.circular(12)),
+                    depth: 8,
+                    intensity: 0.7,
+                    lightSource: LightSource.topLeft,
+                    color: Colors.grey[300],
+                  ),
+                  padding: const EdgeInsets.all(12.0),
+                  child: Text(
+                    'Take Picture',
+                    style: TextStyle(
+                      color: Color(0xff5d7599),
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+              SizedBox(height: 25),
+              Container(
+                width: 150,
+                height: 45,
+                child: NeumorphicButton(
+                  onPressed: _findAndRecognize,
+                  style: NeumorphicStyle(
+                    shape: NeumorphicShape.convex,
+                    boxShape:
+                        NeumorphicBoxShape.roundRect(BorderRadius.circular(12)),
+                    depth: 8,
+                    intensity: 0.7,
+                    lightSource: LightSource.topLeft,
+                    color: Colors.grey[300],
+                  ),
+                  padding: const EdgeInsets.all(12.0),
+                  child: Text(
+                    'Detect Emotion',
+                    style: TextStyle(
+                        color: Color(0xff5d7599), fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

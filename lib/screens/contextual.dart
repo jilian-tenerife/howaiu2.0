@@ -42,6 +42,10 @@ class _ContextualFeedbackPageState extends State<ContextualFeedbackPage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              Text(
+                "Contextual Response",
+                style: TextStyle(color: Color(0xff5d7599)),
+              ),
               SizedBox(height: 25),
               if (contextualResponse != '')
                 SizedBox(
@@ -56,12 +60,14 @@ class _ContextualFeedbackPageState extends State<ContextualFeedbackPage> {
                     ),
                     child: Padding(
                       padding: EdgeInsets.all(16.0),
-                      child: Text(
-                        contextualResponse,
-                        style: TextStyle(
-                          fontSize: 15.0,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xff5d7599),
+                      child: SingleChildScrollView(
+                        child: Text(
+                          contextualResponse,
+                          style: TextStyle(
+                            fontSize: 15.0,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xff5d7599),
+                          ),
                         ),
                       ),
                     ),

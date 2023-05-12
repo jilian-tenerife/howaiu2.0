@@ -159,14 +159,15 @@ class _DiaryScreenState extends State<DiaryScreen> {
   @override
   Widget build(BuildContext context) {
     Color baseColor = const Color(0xffdadada);
-
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
     return SafeArea(
       child: Scaffold(
         backgroundColor: baseColor,
         body: Column(
           children: [
             SizedBox(
-              height: 25,
+              height: screenHeight * 0.025,
             ),
             Text(
               "How was your day?",
@@ -176,11 +177,11 @@ class _DiaryScreenState extends State<DiaryScreen> {
                   color: Color(0xff5d7599)),
             ),
             SizedBox(
-              height: 25,
+              height: screenHeight * 0.025,
             ),
             SizedBox(
-              width: 350,
-              height: 300,
+              width: screenWidth * 0.875, // 87.5% of screen width
+              height: screenHeight * 0.3,
               child: Neumorphic(
                 style: NeumorphicStyle(
                   depth: -5,
@@ -207,7 +208,7 @@ class _DiaryScreenState extends State<DiaryScreen> {
               ),
             ),
             SizedBox(
-              height: 50,
+              height: screenHeight * 0.05,
             ),
             NeumorphicButton(
               onPressed: () {
@@ -241,7 +242,7 @@ class _DiaryScreenState extends State<DiaryScreen> {
               ),
             ),
             SizedBox(
-              height: 10,
+              height: screenHeight * 0.02,
             ),
             NeumorphicButton(
               onPressed: () {
@@ -298,7 +299,7 @@ class _DiaryScreenState extends State<DiaryScreen> {
               child: Text(
                 "Contextual",
                 style: TextStyle(
-                  fontSize: 16.0,
+                  fontSize: 18.0,
                   fontWeight: FontWeight.bold,
                   color: Color(0xff5d7599),
                 ),
@@ -312,6 +313,9 @@ class _DiaryScreenState extends State<DiaryScreen> {
                 lightSource: LightSource
                     .bottomLeft, // Set the direction of the light source
               ),
+            ),
+            SizedBox(
+              height: screenHeight * 0.02,
             ),
             Expanded(
               child: ListView.builder(

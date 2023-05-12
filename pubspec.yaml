@@ -76,7 +76,7 @@ flutter:
     - assets/images/logo.png
     - assets/images/splashscreen.json
     - assets/images/uwu.json
-    - assets/images/stats.jpg
+    - assets/images/stats.png
     - assets/images/howaiu.png
 
   # An image asset can refer to one or more resolution-specific "variants", see

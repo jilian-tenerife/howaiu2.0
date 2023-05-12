@@ -23,33 +23,35 @@ class _SettingsPageState extends State<Settings> {
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: Color(0xffdadada),
       body: Stack(
         children: [
           Positioned(
-              top: 50,
-              left: 30,
+              top: screenHeight * 0.05, // 5% of screen height
+              left: screenWidth * 0.05, // 5% of screen width
               child: Row(
                 children: [
                   Icon(
                     Icons.settings,
                     size: 25,
-                    color: Colors.white,
+                    color: Color(0xff5d7599),
                   ),
-                  SizedBox(width: 10),
+                  SizedBox(width: screenWidth * 0.05),
                   Text(
                     'Settings',
                     style: TextStyle(
                         fontSize: 40,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white),
+                        color: Color(0xff5d7599)),
                   ),
                 ],
               )),
           Positioned(
-            left: 23,
-            top: 120,
+            left: screenWidth * 0.05, // 5% of screen width
+            top: screenHeight * 0.15,
             child: Neumorphic(
               style: NeumorphicStyle(
                   shape: NeumorphicShape.convex,
@@ -60,8 +62,8 @@ class _SettingsPageState extends State<Settings> {
                   color: Color(0xffdadada),
                   lightSource: LightSource.topLeft),
               child: Container(
-                width: 365,
-                height: 650,
+                width: screenWidth * 0.9, // 90% of screen width
+                height: screenHeight * 0.65,
                 decoration: BoxDecoration(
                     color: Color(0xffdadada),
                     borderRadius: BorderRadius.all(Radius.circular(20))),
@@ -89,7 +91,7 @@ class _SettingsPageState extends State<Settings> {
                         style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
-                            color: Colors.white),
+                            color: Color(0xff5d7599)),
                       ),
                     ],
                   ),
@@ -128,7 +130,9 @@ class _SettingsPageState extends State<Settings> {
           Text(
             title,
             style: TextStyle(
-                fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Color(0xff5d7599)),
           ),
           Transform.scale(
             scale: 1,
@@ -169,11 +173,11 @@ class _SettingsPageState extends State<Settings> {
               style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: Colors.white),
+                  color: Color(0xff5d7599)),
             ),
             Icon(
               Icons.arrow_forward_ios,
-              color: Color(0xff4B4B4B),
+              color: Colors.white,
             ),
           ],
         ),
