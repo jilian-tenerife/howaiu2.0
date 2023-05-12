@@ -4,10 +4,9 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class ContextualFeedbackPage extends StatefulWidget {
-  final String entry;
-  final List<String> previousEntries;
+  final String formatted_date;
 
-  ContextualFeedbackPage({required this.entry, required this.previousEntries});
+  ContextualFeedbackPage({required this.formatted_date});
 
   @override
   _ContextualFeedbackPageState createState() => _ContextualFeedbackPageState();
@@ -15,43 +14,6 @@ class ContextualFeedbackPage extends StatefulWidget {
 
 class _ContextualFeedbackPageState extends State<ContextualFeedbackPage> {
   String contextualResponse = '';
-
-  @override
-  void initState() {
-    super.initState();
-    getContextualFeedback();
-  }
-
-  Future<void> getContextualFeedback() async {
-    await processRequest('contextual_response', widget.entry, (String value) {
-      if (mounted) {
-        setState(() {
-          contextualResponse = value;
-        });
-      }
-    });
-  }
-
-  Future<void> processRequest(
-      String route, String entry, Function(String) callback) async {
-    // Uncomment the following lines and replace with your server logic
-    final response = await http.post(
-      Uri.parse('http://127.0.0.1:5000/$route'),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'entry': entry}),
-    );
-
-    if (response.statusCode == 200) {
-      callback(jsonDecode(response.body)[route]);
-    } else {
-      callback('Error: ${response.statusCode}');
-    }
-
-    // Mock response
-    // Future.delayed(Duration(seconds: 1), () {
-    //   callback('Mock response for $route');
-    // });
-  }
 
   @override
   Widget build(BuildContext context) {

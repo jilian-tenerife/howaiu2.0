@@ -279,8 +279,14 @@ class _DiaryScreenState extends State<DiaryScreen> {
                                 fontWeight: FontWeight.bold),
                           ),
                           onPressed: () {
-                            Navigator.of(context).pop();
                             getContextToday();
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ContextualFeedbackPage(
+                                        formatted_date: widget.formattedDate,
+                                      )),
+                            );
                           },
                         ),
                       ],
