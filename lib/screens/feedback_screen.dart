@@ -50,7 +50,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
   Future<void> processRequest(
       String route, String entry, Function(String) callback) async {
     final response = await http.post(
-      Uri.parse('http://127.0.0.1:5001/$route'),
+      Uri.parse('http://192.168.8.111:5001/$route'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({'entry': entry}),
     );

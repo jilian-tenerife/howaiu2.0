@@ -39,7 +39,7 @@ class _CameraState extends State<Camera> {
       final userImgB64 = base64Encode(userImgBytes);
 
       final response = await dio.post(
-        'http://172.30.1.84:5000/find_and_recognize',
+        'http://192.168.8.111:5001/find_and_recognize',
         data: jsonEncode({
           'new_image': userImgB64,
         }),

@@ -48,7 +48,7 @@ class _ChatAiuState extends State<ChatAiu> {
     }
 
     final response = await http.post(
-      Uri.parse('http://192.168.244.88:5001/chat'),
+      Uri.parse('http://192.168.8.111:5001/chat'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({'message': message, 'name': name}),
     );

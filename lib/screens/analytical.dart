@@ -35,7 +35,7 @@ class _AnalyticalFeedbackPageState extends State<AnalyticalFeedbackPage> {
       String route, String entry, Function(String) callback) async {
     // Uncomment the following lines and replace with your server logic
     final response = await http.post(
-      Uri.parse('http://192.168.244.88:5001/$route'),
+      Uri.parse('http://192.168.8.111:5001/$route'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({'entry': entry}),
     );

@@ -33,7 +33,7 @@ class _DiaryScreenState extends State<DiaryScreen> {
 
   Future<void> processRequest(String route) async {
     final response = await http.post(
-      Uri.parse('http://192.168.246.88:5001/$route'),
+      Uri.parse('http://192.168.8.111:5001/$route'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({'entry': entryController.text}),
     );
@@ -122,7 +122,7 @@ class _DiaryScreenState extends State<DiaryScreen> {
 
   Future<String> getSummaryFromPythonAPI(List<String> entries) async {
     final response = await http.post(
-      Uri.parse('http://192.168.246.88:5001/summary'),
+      Uri.parse('http://192.168.8.111:5001/summary'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
